@@ -1,7 +1,11 @@
 const express = require('express');
 const app = express();
-const { chromium } = require('playwright');
 
+const { chromium } = require('playwright');
+const bodyParser = require('body-parser');
+
+// Use body-parser to parse form data
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 // ================= PRODUCT ROUTE =================
