@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
-const { chromium } = require('playwright');
+const { chromium } = require('playwright-extra')
+const stealth = require('puppeteer-extra-plugin-stealth')()
+chromium.use(stealth)
+
 const bodyParser = require('body-parser');
 app.use(express.json());
 // Use body-parser to parse form data
