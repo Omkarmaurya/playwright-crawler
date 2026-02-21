@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { chromium } = require('playwright');
+const { firefox } = require('playwright');
 const bodyParser = require('body-parser');
 app.use(express.json());
 
@@ -9,7 +9,7 @@ let browser;
 // ================= LAUNCH BROWSER ONCE =================
 (async () => {
     try {
-        browser = await chromium.launch({
+        browser = await firefox.launch({
             headless: true,
             args: [
                 '--single-process',
@@ -18,7 +18,7 @@ let browser;
             ],
         });
 
-        console.log('✅ Chromium launched successfully');
+        console.log('✅ Firefox launched successfully');
     } catch (err) {
         console.error('❌ Browser launch error:', err);
         process.exit(1);
