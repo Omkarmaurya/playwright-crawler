@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const { chromium } = require('playwright');
-
+const bodyParser = require('body-parser');
 app.use(express.json());
 
 let browser;
