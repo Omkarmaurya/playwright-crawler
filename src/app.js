@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { firefox } = require('playwright');
+const { webkit } = require('playwright');
 const bodyParser = require('body-parser');
 app.use(express.json());
 // Use body-parser to parse form data
@@ -17,7 +17,7 @@ app.post('/product', async (req, res) => {
     let browser;
 
     try {
-        browser = await firefox.launch({
+        browser = await webkit.launch({
             headless: true,
             args: [
                 '--single-process',
