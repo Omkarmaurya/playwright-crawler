@@ -24,6 +24,9 @@ app.post('/product', async (req, res) => {
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
             ],
+             firefoxUserPrefs: {
+        'security.sandbox.content.level': 0
+    }
         });
 
         const page = await browser.newPage();
