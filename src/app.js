@@ -1,23 +1,13 @@
 const express = require('express');
 const app = express();
-
 const { chromium } = require('playwright');
-const bodyParser = require('body-parser');
 
-// Use body-parser to parse form data
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-// ================= PRODUCT ROUTE =================
-app.post('/product', async (req, res) => {
-    const { url } = req.body;
+let browser;
 
-    if (!url) {
-        return res.status(400).json({ success: false, error: 'URL is required' });
-    }
-
-    let browser;
-
+// ================= LAUNCH BROWSER ONCE =================
+(async () => {
     try {
         browser = await chromium.launch({
             headless: true,
@@ -28,14 +18,34 @@ app.post('/product', async (req, res) => {
             ],
         });
 
-        const context = await browser.newContext({
+        console.log('✅ Chromium launched successfully');
+    } catch (err) {
+        console.error('❌ Browser launch error:', err);
+        process.exit(1);
+    }
+})();
+
+// ================= PRODUCT ROUTE =================
+app.post('/product', async (req, res) => {
+    const { url } = req.body;
+
+    if (!url) {
+        return res.status(400).json({ success: false, error: 'URL is required' });
+    }
+
+    let context;
+    let page;
+
+    try {
+        // Create isolated browser context (VERY IMPORTANT)
+        context = await browser.newContext({
             userAgent:
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
             locale: 'en-US',
             viewport: { width: 1280, height: 800 }
         });
 
-        const page = await context.newPage();
+        page = await context.newPage();
 
         await page.goto(url, {
             waitUntil: 'domcontentloaded',
@@ -135,14 +145,32 @@ app.post('/product', async (req, res) => {
             error: error.message
         });
     } finally {
-        if (browser) {
-            await browser.close();
+        // Close only the context (NOT the browser)
+        if (context) {
+            await context.close();
         }
     }
 });
 
+// ================= GRACEFUL SHUTDOWN =================
+process.on('SIGINT', async () => {
+    console.log('Shutting down...');
+    if (browser) {
+        await browser.close();
+    }
+    process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+    if (browser) {
+        await browser.close();
+    }
+    process.exit(0);
+});
+
+// ================= START SERVER =================
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
