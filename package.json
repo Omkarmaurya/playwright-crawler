@@ -15,6 +15,7 @@
     "body-parser": "^1.20.3",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "playwright": "^1.50.1"
+    "playwright": "^1.50.1",
+     "cors": "^2.8.6"
   }
 }
