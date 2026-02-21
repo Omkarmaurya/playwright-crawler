@@ -26,14 +26,7 @@ app.post('/product', async (req, res) => {
             ],
         });
 
-        const context = await browser.newContext({
-            userAgent:
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-            locale: 'en-US',
-            viewport: { width: 1280, height: 800 }
-        });
-
-        const page = await context.newPage();
+        const page = await browser.newPage();
 
         await page.goto(url, {
             waitUntil: 'domcontentloaded',
