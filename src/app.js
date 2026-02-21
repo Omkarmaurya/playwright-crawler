@@ -18,7 +18,7 @@ app.post('/product', async (req, res) => {
 
     try {
         browser = await chromium.launch({
-            headless: true,
+            headless: false,
             args: [
                 '--single-process',
                 '--no-sandbox',
